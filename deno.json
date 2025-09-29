@@ -3,9 +3,15 @@
 		"dev": "deno run --watch main.ts",
 		"lint": "deno lint",
 		"format": "deno fmt",
-		"typecheck": "deno check **/*.ts"
+		"typecheck": "deno check src/**/*.ts"
 	},
 	"imports": {
-		"@std/assert": "jsr:@std/assert@1"
+		"@std/assert": "jsr:@std/assert@1",
+		"@tcgdex/sdk": "npm:@tcgdex/sdk@^2.7.1",
+		"@types/pg": "npm:@types/pg@^8.15.5",
+		"drizzle-kit": "npm:drizzle-kit@^0.31.5",
+		"drizzle-orm": "npm:drizzle-orm@^0.44.5",
+		"pg": "npm:pg@^8.16.3",
+		"resend": "npm:resend@^6.1.0"
 	}
 }
