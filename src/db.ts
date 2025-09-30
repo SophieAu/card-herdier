@@ -8,16 +8,20 @@ import {
   trackedPokemonRelations as pokemonRelations,
 } from "../drizzle/relations.ts";
 import pg from "pg";
-import { Card } from "@tcgdex/sdk";
 
 export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
+export type Card = Omit<typeof cardsSchema.$inferInsert, "createdAt">;
+
+const DATABASE_URL = `postgresql://${Deno.env.get("PGUSER")}:${
+  Deno.env.get("PGPASSWORD")
+}@${Deno.env.get("PGHOST")}:5432/${Deno.env.get("PGDATABASE")}`;
 
 // Use pg driver.
 const { Pool } = pg;
 
 // Instantiate Drizzle client with pg driver and schema.
 export const db = drizzle({
-  client: new Pool({ connectionString: Deno.env.get("DATABASE_URL") }),
+  client: new Pool({ connectionString: DATABASE_URL, ssl: true }),
   schema: { cardsSchema, pokemonSchema, cardsRelations, pokemonRelations },
 });
 
@@ -29,10 +33,7 @@ export const getAllTrackedPokemon = async () =>
 export const getAllCards = async () =>
   await db.select({ cardId: cardsSchema.cardId }).from(cardsSchema);
 
-// Add new card
-export const insertCard = async (pokemonId: number, card: Card) =>
-  await db.insert(cardsSchema).values({
-    pokemonId,
-    cardId: card.id,
-    pokemonInfo: card,
-  });
+// Add new Card
+export const insertCards = async (
+  ...newCards: Card[]
+) => await db.insert(cardsSchema).values(newCards);
