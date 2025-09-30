@@ -1,7 +1,7 @@
 import {
   foreignKey,
   integer,
-  json,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -34,15 +34,14 @@ export const pokemonCards = pgTable("pokemon_cards", {
     cache: 1,
   }),
   pokemonId: integer("pokemon_id").notNull(),
-  pokemonInfo: json("pokemon_info").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
   cardId: text("card_id").notNull(),
+  cardInfo: jsonb("card_info").notNull(),
 }, (table) => [
   foreignKey({
     columns: [table.pokemonId],
     foreignColumns: [trackedPokemon.id],
     name: "tracked_pokemon_id",
   }).onUpdate("cascade").onDelete("cascade"),
-  unique("pokemon_cards_pokemon_id_key").on(table.pokemonId),
   unique("pokemon_cards_card_id_key").on(table.cardId),
 ]);

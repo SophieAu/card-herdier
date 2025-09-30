@@ -3,7 +3,8 @@
 		"dev": "deno run --env src/main.ts",
 		"lint": "deno lint",
 		"format": "deno fmt",
-		"typecheck": "deno check src/**/*.ts"
+		"typecheck": "deno check src/**/*.ts",
+		"db-gen": "deno --env -A --node-modules-dir npm:drizzle-kit pull"
 	},
 	"imports": {
 		"@std/assert": "jsr:@std/assert@1",

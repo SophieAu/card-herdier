@@ -2,11 +2,11 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import {
   pokemonCards as cardsSchema,
   trackedPokemon as pokemonSchema,
-} from "../drizzle/schema.ts";
+} from "../../drizzle/schema.ts";
 import {
   pokemonCardsRelations as cardsRelations,
   trackedPokemonRelations as pokemonRelations,
-} from "../drizzle/relations.ts";
+} from "../../drizzle/relations.ts";
 import pg from "pg";
 
 export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
@@ -23,6 +23,7 @@ const { Pool } = pg;
 export const db = drizzle({
   client: new Pool({ connectionString: DATABASE_URL, ssl: true }),
   schema: { cardsSchema, pokemonSchema, cardsRelations, pokemonRelations },
+  logger: true,
 });
 
 // Get all Pokemon
