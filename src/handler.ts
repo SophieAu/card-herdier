@@ -1,22 +1,23 @@
-import * as db from "./db.ts";
-import { Card, CardResume } from "@tcgdex/sdk";
-import { Resend } from "resend";
-import { logger } from "./logging.ts";
-import console from "node:console";
-import * as tcgApi from "./tcgApi.ts";
-
-type CardResumeTuple = [db.TrackedPokemon, CardResume[]];
-type SingleCardResumeTuple = [db.TrackedPokemon, CardResume];
-
-type SingleCardThrouple = [db.TrackedPokemon, string, Card];
-
-// const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+import * as db from "./adapters/db.ts";
+import { logger } from "./adapters/logging.ts";
+import * as tcgApi from "./adapters/api.ts";
+import {
+  Card,
+  CardResumeTuple,
+  SeenCard,
+  SingleCardResumeTuple,
+  SingleCardThrouple,
+  TrackedPokemon,
+} from "./types.ts";
+import { sendEmail } from "./adapters/email.ts";
 
 export const fetchAllPokemon = async () => {
-  // 1. Ping DB and get all "followed pokemon"
+  logger.info("Started updating card list");
+
+  // 1. ping DB and get all "followed pokemon"
   const followedPokemon = await loadFollowedPokemon();
   if (!followedPokemon.length) return;
-  console.info(`${followedPokemon.length} Pokémon followed`);
+  logger.info(`${followedPokemon.length} Pokémon followed`);
 
   // 2. ping Pokemon API and get all responses that include the pokemon name
   const fetchedCards = await getAllCards(followedPokemon);
@@ -26,15 +27,27 @@ export const fetchAllPokemon = async () => {
   const knownCardIds = await loadKnownCardIds();
   if (!knownCardIds) return;
   const newCards = getNewCardsPerPokemon(knownCardIds, fetchedCards);
+  if (!newCards.length) {
+    logger.info("There are no new cards");
+    logger.info("Finished updating card list");
+    return;
+  }
 
   // 4. get extended info on those new cards
   const newExtendedCards = await getFullNewCards(newCards);
+  logger.info(
+    `${knownCardIds.length} already seen, ${newExtendedCards.length} new cards to be added`,
+  );
 
   // 5. add new cards to Database
   const didInsertSuccessfully = await saveNewCards(newExtendedCards);
-  if (!didInsertSuccessfully) {
-    logger.warn("Probably something I want to add to the email?");
-  }
+
+  // 6. send update email
+  await sendNotificationEmail(newExtendedCards, {
+    showSaveWarning: !didInsertSuccessfully,
+  });
+
+  logger.info("Finished updating card list");
 };
 
 const getFullNewCards = async (cards: CardResumeTuple[]) => {
@@ -57,12 +70,12 @@ const getFullNewCards = async (cards: CardResumeTuple[]) => {
 
       const [pokemon, cardId, card] = fetchResult.value;
       if (!card) {
-        console.error(`Card ${cardId} (${pokemon.name}) not found`);
+        logger.error(`Card ${cardId} (${pokemon.name}) not found`);
         return acc;
       }
 
       if (card.id != cardId) {
-        console.error(`Card ${cardId} does not match with found id ${card.id}`);
+        logger.error(`Card ${cardId} does not match with found id ${card.id}`);
         return acc;
       }
 
@@ -90,7 +103,7 @@ const loadFollowedPokemon = async () => {
   }
 };
 
-const getAllCards = async (pokemon: db.TrackedPokemon[]) => {
+const getAllCards = async (pokemon: TrackedPokemon[]) => {
   try {
     const fetchResults = await Promise.allSettled(
       pokemon.map(getAllCardsForPokemon),
@@ -104,7 +117,7 @@ const getAllCards = async (pokemon: db.TrackedPokemon[]) => {
 
       const [pokemon, cardsForPokemon] = fetchResult.value;
       if (!cardsForPokemon.length) {
-        console.warn(`No Cards found for ${pokemon.name}`);
+        logger.warn(`No Cards found for ${pokemon.name}`);
         return acc;
       }
 
@@ -118,7 +131,7 @@ const getAllCards = async (pokemon: db.TrackedPokemon[]) => {
   }
 };
 
-const getCard = async (pokemon: db.TrackedPokemon, cardId: string) => {
+const getCard = async (pokemon: TrackedPokemon, cardId: string) => {
   return [
     pokemon,
     cardId,
@@ -126,7 +139,7 @@ const getCard = async (pokemon: db.TrackedPokemon, cardId: string) => {
   ] as SingleCardThrouple;
 };
 
-const getAllCardsForPokemon = async (pokemon: db.TrackedPokemon) => {
+const getAllCardsForPokemon = async (pokemon: TrackedPokemon) => {
   return [
     pokemon,
     await tcgApi.getAllCardsForPokemon(pokemon.name),
@@ -152,19 +165,21 @@ const getNewCardsPerPokemon = (
     const newCards = cards.filter((card) => !knownCards.includes(card.id));
     if (!newCards.length) return acc;
 
-    // Tuple seems to not like destructuring? Unsure what's the problem here...
-    acc.push([pokemon, newCards]);
-    return acc;
+    return [...acc, [pokemon, newCards]] as CardResumeTuple[];
   }, [] as CardResumeTuple[]);
 
 const saveNewCards = async (newCards: SingleCardThrouple[]) => {
+  type ExtendedCard = Card & { sdk: object };
+
   try {
-    const cleanInsert = newCards.map((cardInfo) => {
+    const cleanInsert = newCards.map((newCard) => {
+      const { sdk: _sdk, ...cardInfo } = newCard[2] as ExtendedCard;
+
       return ({
-        pokemonId: cardInfo[0].id,
-        cardId: cardInfo[1],
-        pokemonInfo: cardInfo[2],
-      } as db.Card);
+        pokemonId: newCard[0].id,
+        cardId: newCard[1],
+        cardInfo: cardInfo,
+      } as SeenCard);
     });
 
     await db.insertCards(...cleanInsert);
@@ -174,17 +189,38 @@ const saveNewCards = async (newCards: SingleCardThrouple[]) => {
     return false;
   }
 };
-// const notify = async () => {
-//   try {
-//     const data = await resend.emails.send({
-//       from: "Acme <onboarding@resend.dev>",
-//       to: ["delivered@resend.dev"],
-//       subject: "Hello World",
-//       html: "<strong>It works!</strong>",
-//     });
 
-//     console.log(data);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+const sendNotificationEmail = async (
+  newCards: SingleCardThrouple[],
+  options: { showSaveWarning: boolean },
+) => {
+  const EMAIL_SUBJECT = "There are new Pokémon Cards!";
+
+  const EMAIL_BODY = (newCards: string) =>
+    `<p>Heya!<p><p>New Pokémon cards have been released:<ul>${newCards}</ul></p>`;
+
+  const IMAGE = (imgUrl: string) => ` (<a href=${imgUrl}/high.jpg>image</a>)`;
+
+  const SAVE_WARNING =
+    '<p>Just a heads up that there were some issues updating the database so you might "re-see" some cards tomorrow</p>';
+
+  const newCardString = newCards.reduce((acc, c) => {
+    const cardInfo = c[2];
+
+    const line =
+      `<li>${cardInfo.name} - ${cardInfo.set.name} #${cardInfo.localId}${
+        cardInfo.image ? IMAGE(cardInfo.image) : ""
+      }</li>`;
+
+    return acc + line;
+  }, "");
+
+  const body = EMAIL_BODY(newCardString) +
+    (options.showSaveWarning ? SAVE_WARNING : "");
+
+  try {
+    await sendEmail(EMAIL_SUBJECT, body);
+  } catch (error) {
+    logger.error(error);
+  }
+};

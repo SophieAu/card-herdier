@@ -20,7 +20,7 @@ const DATABASE_URL = `postgresql://${Deno.env.get("PGUSER")}:${
 const { Pool } = pg;
 
 // Instantiate Drizzle client with pg driver and schema.
-export const db = drizzle({
+const db = drizzle({
   client: new Pool({ connectionString: DATABASE_URL, ssl: true }),
   schema: { cardsSchema, pokemonSchema, cardsRelations, pokemonRelations },
   logger: true,
