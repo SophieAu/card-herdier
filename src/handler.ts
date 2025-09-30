@@ -17,7 +17,7 @@ export const fetchAllPokemon = async () => {
   // 1. ping DB and get all "followed pokemon"
   const followedPokemon = await loadFollowedPokemon();
   if (!followedPokemon.length) return;
-  logger.info(`${followedPokemon.length} Pokémon followed`);
+  logger.info(`${followedPokemon.length} Pokemon followed`);
 
   // 2. ping Pokemon API and get all responses that include the pokemon name
   const fetchedCards = await getAllCards(followedPokemon);
@@ -93,7 +93,7 @@ const loadFollowedPokemon = async () => {
   try {
     const pokemon = await db.getAllTrackedPokemon();
     if (!pokemon.length) {
-      logger.warn("No Pokémon tracked");
+      logger.warn("No Pokemon tracked");
     }
 
     return pokemon;
