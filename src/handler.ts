@@ -35,12 +35,13 @@ export const fetchAllPokemon = async () => {
 
   // 4. get extended info on those new cards
   const newExtendedCards = await getFullNewCards(newCards);
+  const newExtendedNonTCGPCards = await filterTCGPCards(newExtendedCards)
   logger.info(
-    `${knownCardIds.length} already seen, ${newExtendedCards.length} new cards to be added`,
+    `${knownCardIds.length} already seen, ${newExtendedNonTCGPCards.length} new cards to be added`,
   );
 
   // 5. add new cards to Database
-  const didInsertSuccessfully = await saveNewCards(newExtendedCards);
+  const didInsertSuccessfully = await saveNewCards(newExtendedNonTCGPCards);
 
   // 6. send update email
   await sendNotificationEmail(newExtendedCards, {
@@ -48,45 +49,6 @@ export const fetchAllPokemon = async () => {
   });
 
   logger.info("Finished updating card list");
-};
-
-const getFullNewCards = async (cards: CardResumeTuple[]) => {
-  const flatNewCards = cards.flatMap(([pokemon, cards]) =>
-    cards.map((card) => [pokemon, card] as SingleCardResumeTuple)
-  );
-
-  try {
-    const fetchResults = await Promise.allSettled(
-      flatNewCards.map((
-        card,
-      ) => getCard(card[0], card[1].id)),
-    );
-
-    const newCards = fetchResults.reduce((acc, fetchResult) => {
-      if (fetchResult.status != "fulfilled") {
-        logger.error(fetchResult.reason);
-        return acc;
-      }
-
-      const [pokemon, cardId, card] = fetchResult.value;
-      if (!card) {
-        logger.error(`Card ${cardId} (${pokemon.name}) not found`);
-        return acc;
-      }
-
-      if (card.id != cardId) {
-        logger.error(`Card ${cardId} does not match with found id ${card.id}`);
-        return acc;
-      }
-
-      return [...acc, fetchResult.value];
-    }, [] as SingleCardThrouple[]);
-
-    return newCards;
-  } catch (e: unknown) {
-    logger.error((e as Error).message);
-    return [];
-  }
 };
 
 const loadFollowedPokemon = async () => {
@@ -168,6 +130,51 @@ const getNewCardsPerPokemon = (
     return [...acc, [pokemon, newCards]] as CardResumeTuple[];
   }, [] as CardResumeTuple[]);
 
+const getFullNewCards = async (cards: CardResumeTuple[]) => {
+  const flatNewCards = cards.flatMap(([pokemon, cards]) =>
+    cards.map((card) => [pokemon, card] as SingleCardResumeTuple)
+  );
+
+  try {
+    const fetchResults = await Promise.allSettled(
+      flatNewCards.map((
+        card,
+      ) => getCard(card[0], card[1].id)),
+    );
+
+    const newCards = fetchResults.reduce((acc, fetchResult) => {
+      if (fetchResult.status != "fulfilled") {
+        logger.error(fetchResult.reason);
+        return acc;
+      }
+
+      const [pokemon, cardId, card] = fetchResult.value;
+      if (!card) {
+        logger.error(`Card ${cardId} (${pokemon.name}) not found`);
+        return acc;
+      }
+
+      if (card.id != cardId) {
+        logger.error(`Card ${cardId} does not match with found id ${card.id}`);
+        return acc;
+      }
+
+      return [...acc, fetchResult.value];
+    }, [] as SingleCardThrouple[]);
+
+    return newCards;
+  } catch (e: unknown) {
+    logger.error((e as Error).message);
+    return [];
+  }
+};
+
+const filterTCGPCards = async (allNewCards: SingleCardThrouple[]) => {
+  const tcgpSets = await tcgApi.getTcgpSets()
+
+  return allNewCards.filter(card => !tcgpSets.includes(card[2].set.id))
+}
+
 const saveNewCards = async (newCards: SingleCardThrouple[]) => {
   type ExtendedCard = Card & { sdk: object };
 
@@ -208,8 +215,7 @@ const sendNotificationEmail = async (
     const cardInfo = c[2];
 
     const line =
-      `<li>${cardInfo.name} - ${cardInfo.set.name} #${cardInfo.localId}${
-        cardInfo.image ? IMAGE(cardInfo.image) : ""
+      `<li>${cardInfo.name} - ${cardInfo.set.name} #${cardInfo.localId}${cardInfo.image ? IMAGE(cardInfo.image) : ""
       }</li>`;
 
     return acc + line;
