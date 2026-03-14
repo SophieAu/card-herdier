@@ -1,16 +1,13 @@
 import { relations } from "drizzle-orm/relations";
-import { pokemonCards, trackedPokemon } from "./schema.ts";
+import { trackedPokemon, pokemonCards } from "./schema.ts";
 
-export const pokemonCardsRelations = relations(pokemonCards, ({ one }) => ({
-  trackedPokemon: one(trackedPokemon, {
-    fields: [pokemonCards.pokemonId],
-    references: [trackedPokemon.id],
-  }),
+export const pokemonCardsRelations = relations(pokemonCards, ({one}) => ({
+	trackedPokemon: one(trackedPokemon, {
+		fields: [pokemonCards.pokemonId],
+		references: [trackedPokemon.id]
+	}),
 }));
 
-export const trackedPokemonRelations = relations(
-  trackedPokemon,
-  ({ many }) => ({
-    pokemonCards: many(pokemonCards),
-  }),
-);
+export const trackedPokemonRelations = relations(trackedPokemon, ({many}) => ({
+	pokemonCards: many(pokemonCards),
+}));

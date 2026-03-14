@@ -6,15 +6,15 @@ import {
 } from "../../drizzle/relations.ts";
 import {
   pokemonCards as cardsSchema,
-  trackedPokemon as pokemonSchema,
+  notificationEmailLog as notificationEmailLogSchema,
+  trackedPokemon as pokemonSchema
 } from "../../drizzle/schema.ts";
 
 export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
 export type Card = Omit<typeof cardsSchema.$inferInsert, "createdAt">;
 
-const DATABASE_URL = `postgresql://${Deno.env.get("PGUSER")}:${
-  Deno.env.get("PGPASSWORD")
-}@${Deno.env.get("PGHOST")}:5432/${Deno.env.get("PGDATABASE")}`;
+const DATABASE_URL = `postgresql://${Deno.env.get("PGUSER")}:${Deno.env.get("PGPASSWORD")
+  }@${Deno.env.get("PGHOST")}:5432/${Deno.env.get("PGDATABASE")}`;
 
 // Use pg driver.
 const { Pool } = pg;
@@ -38,3 +38,10 @@ export const getAllCards = async () =>
 export const insertCards = async (
   ...newCards: Card[]
 ) => await db.insert(cardsSchema).values(newCards);
+
+
+// NOTE: After regenerating the db schema, replace `mode: 'string'` with `mode: 'date'` for the `attempted_at` column
+// This lets us use Date objects instead of ISO strings for timestamps
+type NotificationEmailLog = typeof notificationEmailLogSchema.$inferInsert
+export const logNotificationEmail = async ({ attemptedAt, emailBody, success }: NotificationEmailLog) =>
+  await db.insert(notificationEmailLogSchema).values({ attemptedAt, emailBody, success })

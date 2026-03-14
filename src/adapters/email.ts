@@ -12,14 +12,10 @@ export const sendEmail = async (subject: string, body: string) => {
     return;
   }
 
-  try {
-    await resend.emails.send({
-      from: SENDER,
-      to: [RECIPIENT],
-      subject: subject,
-      html: body,
-    });
-  } catch (error) {
-    logger.error(error);
-  }
+  await resend.emails.send({
+    from: SENDER,
+    to: [RECIPIENT],
+    subject: subject,
+    html: body,
+  });
 };

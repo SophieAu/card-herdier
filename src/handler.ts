@@ -226,9 +226,13 @@ const sendNotificationEmail = async (
   const body = EMAIL_BODY(newCardString) +
     (options.showSaveWarning ? SAVE_WARNING : "");
 
+  let wasEmailSentSuccessfully = false;
   try {
     await sendEmail(EMAIL_SUBJECT, body);
+    wasEmailSentSuccessfully = true
   } catch (error) {
-    logger.error(error);
+    logger.error("Failed to send email: ", error);
   }
+  db.logNotificationEmail({ attemptedAt: new Date(), emailBody: body, success: wasEmailSentSuccessfully })
 };
+
