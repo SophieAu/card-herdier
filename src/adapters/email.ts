@@ -4,7 +4,7 @@ import { logger } from "./logging.ts";
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const RECIPIENT = Deno.env.get("EMAIL_RECIPIENT");
-const SENDER = "Card Herdier <onboarding@resend.dev>"
+const SENDER = "Card Herdier <onboarding@resend.dev>";
 
 export const sendEmail = async (subject: string, body: string) => {
   if (!RECIPIENT) {

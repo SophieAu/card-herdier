@@ -1,13 +1,13 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import {
-  pokemonCards as cardsSchema,
-  trackedPokemon as pokemonSchema,
-} from "../../drizzle/schema.ts";
+import pg from "pg";
 import {
   pokemonCardsRelations as cardsRelations,
   trackedPokemonRelations as pokemonRelations,
 } from "../../drizzle/relations.ts";
-import pg from "pg";
+import {
+  pokemonCards as cardsSchema,
+  trackedPokemon as pokemonSchema,
+} from "../../drizzle/schema.ts";
 
 export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
 export type Card = Omit<typeof cardsSchema.$inferInsert, "createdAt">;

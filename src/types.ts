@@ -1,5 +1,5 @@
-import * as tcgApi from "@tcgdex/sdk";
-import * as db from "./adapters/db.ts";
+import type * as tcgApi from "@tcgdex/sdk";
+import type * as db from "./adapters/db.ts";
 
 export type CardResumeTuple = [db.TrackedPokemon, tcgApi.CardResume[]];
 export type SingleCardResumeTuple = [db.TrackedPokemon, tcgApi.CardResume];

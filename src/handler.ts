@@ -1,7 +1,8 @@
-import * as db from "./adapters/db.ts";
-import { logger } from "./adapters/logging.ts";
 import * as tcgApi from "./adapters/api.ts";
-import {
+import * as db from "./adapters/db.ts";
+import { sendEmail } from "./adapters/email.ts";
+import { logger } from "./adapters/logging.ts";
+import type {
   Card,
   CardResumeTuple,
   SeenCard,
@@ -9,7 +10,6 @@ import {
   SingleCardThrouple,
   TrackedPokemon,
 } from "./types.ts";
-import { sendEmail } from "./adapters/email.ts";
 
 export const fetchAllPokemon = async () => {
   logger.info("Started updating card list");
@@ -35,7 +35,7 @@ export const fetchAllPokemon = async () => {
 
   // 4. get extended info on those new cards
   const newExtendedCards = await getFullNewCards(newCards);
-  const newExtendedNonTCGPCards = await filterTCGPCards(newExtendedCards)
+  const newExtendedNonTCGPCards = await filterTCGPCards(newExtendedCards);
   logger.info(
     `${knownCardIds.length} already seen, ${newExtendedNonTCGPCards.length} new cards to be added`,
   );
@@ -72,7 +72,7 @@ const getAllCards = async (pokemon: TrackedPokemon[]) => {
     );
 
     const cardsByPokemon = fetchResults.reduce((acc, fetchResult) => {
-      if (fetchResult.status != "fulfilled") {
+      if (fetchResult.status !== "fulfilled") {
         logger.error(fetchResult.reason);
         return acc;
       }
@@ -83,7 +83,8 @@ const getAllCards = async (pokemon: TrackedPokemon[]) => {
         return acc;
       }
 
-      return [...acc, fetchResult.value];
+      acc.push(fetchResult.value);
+      return acc;
     }, [] as CardResumeTuple[]);
 
     return cardsByPokemon;
@@ -127,7 +128,8 @@ const getNewCardsPerPokemon = (
     const newCards = cards.filter((card) => !knownCards.includes(card.id));
     if (!newCards.length) return acc;
 
-    return [...acc, [pokemon, newCards]] as CardResumeTuple[];
+    acc.push([pokemon, newCards]);
+    return acc;
   }, [] as CardResumeTuple[]);
 
 const getFullNewCards = async (cards: CardResumeTuple[]) => {
@@ -143,7 +145,7 @@ const getFullNewCards = async (cards: CardResumeTuple[]) => {
     );
 
     const newCards = fetchResults.reduce((acc, fetchResult) => {
-      if (fetchResult.status != "fulfilled") {
+      if (fetchResult.status !== "fulfilled") {
         logger.error(fetchResult.reason);
         return acc;
       }
@@ -154,12 +156,12 @@ const getFullNewCards = async (cards: CardResumeTuple[]) => {
         return acc;
       }
 
-      if (card.id != cardId) {
+      if (card.id !== cardId) {
         logger.error(`Card ${cardId} does not match with found id ${card.id}`);
         return acc;
       }
-
-      return [...acc, fetchResult.value];
+      acc.push(fetchResult.value);
+      return acc;
     }, [] as SingleCardThrouple[]);
 
     return newCards;
@@ -170,10 +172,10 @@ const getFullNewCards = async (cards: CardResumeTuple[]) => {
 };
 
 const filterTCGPCards = async (allNewCards: SingleCardThrouple[]) => {
-  const tcgpSets = await tcgApi.getTcgpSets()
+  const tcgpSets = await tcgApi.getTcgpSets();
 
-  return allNewCards.filter(card => !tcgpSets.includes(card[2].set.id))
-}
+  return allNewCards.filter((card) => !tcgpSets.includes(card[2].set.id));
+};
 
 const saveNewCards = async (newCards: SingleCardThrouple[]) => {
   type ExtendedCard = Card & { sdk: object };

@@ -11,8 +11,8 @@ export const getAllCardsForPokemon = async (pokemonName: string) =>
   );
 
 export const getTcgpSets = async () => {
-  const series = await tcgdex.serie.get('tcgp');
-  if (!series) return []
+  const series = await tcgdex.serie.get("tcgp");
+  if (!series) return [];
 
-  return series.sets.map(set => set.id)
-}
+  return series.sets.map((set) => set.id);
+};
