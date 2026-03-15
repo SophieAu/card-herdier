@@ -27,15 +27,17 @@ export const fetchAllPokemon = async () => {
   const knownCardIds = await loadKnownCardIds();
   if (!knownCardIds) return;
   const newCards = getNewCardsPerPokemon(knownCardIds, fetchedCards);
-  if (!newCards.length) {
-    logger.info("There are no new cards");
-    logger.info("Finished updating card list");
-    return;
-  }
 
   // 4. get extended info on those new cards
   const newExtendedCards = await getFullNewCards(newCards);
   const newExtendedNonTCGPCards = await filterTCGPCards(newExtendedCards);
+
+  // Leave early when there are no new cards
+  if (!newExtendedNonTCGPCards.length) {
+    logger.info("There are no new cards");
+    logger.info("Finished updating card list");
+    return;
+  }
   logger.info(
     `${knownCardIds.length} already seen, ${newExtendedNonTCGPCards.length} new cards to be added`,
   );
@@ -44,7 +46,7 @@ export const fetchAllPokemon = async () => {
   const didInsertSuccessfully = await saveNewCards(newExtendedNonTCGPCards);
 
   // 6. send update email
-  await sendNotificationEmail(newExtendedCards, {
+  await sendNotificationEmail(newExtendedNonTCGPCards, {
     showSaveWarning: !didInsertSuccessfully,
   });
 
