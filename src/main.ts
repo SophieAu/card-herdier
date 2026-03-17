@@ -6,3 +6,13 @@ Deno.cron(
   {},
   fetchAllPokemon,
 );
+
+
+// Add a test endpoint
+Deno.serve(async (req) => {
+  if (req.url.endsWith("/test-cron")) {
+    await fetchAllPokemon();
+    return new Response("Done");
+  }
+  return new Response("Not found", { status: 404 });
+});
