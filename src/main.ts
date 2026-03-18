@@ -6,6 +6,8 @@ Deno.serve(() => new Response("Card Herdier is running"));
 
 
 console.log(Deno.env.get("DENO_TIMELINE"))
+console.log(Deno.env.get("IS_PRODUCTION"))
+console.log("All environment variables:", Deno.env.toObject());
 
 Deno.cron(
   "Check Pokemon API for new releases",
