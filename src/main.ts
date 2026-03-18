@@ -5,6 +5,8 @@ import { fetchAllPokemon } from "./handler.ts";
 Deno.serve(() => new Response("Card Herdier is running"));
 
 
+console.log(Deno.env.get("DENO_TIMELINE"))
+
 Deno.cron(
   "Check Pokemon API for new releases",
   // { hour: { exact: 7 } },
