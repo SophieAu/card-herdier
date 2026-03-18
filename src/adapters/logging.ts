@@ -11,22 +11,32 @@ const formatMessage = (...data: any[]) => data.map(d =>
     typeof d === 'object' ? JSON.stringify(d) : String(d)
 ).join(' ');
 
+const logToAxiom = (level: "error" | "warn" | "info", message: string) => {
+    if (Deno.env.get("IS_PRODUCTION") !== "true") return
+
+    axiom.ingest(AXIOM_DATASET_NAME, [{ level, message, timestamp: new Date().toISOString() }]);
+}
+
+
 const error = (...data: any[]) => {
     const message = formatMessage(...data)
+
     console.log(`ERROR: ${message}`, "color: red")
-    axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'error', message, timestamp: new Date().toISOString() }]);
+    logToAxiom('error', message);
 };
 
 const info = (...data: any[]) => {
     const message = formatMessage(...data)
+
     console.log(`INFO: ${data}`)
-    axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'info', message, timestamp: new Date().toISOString() }]);
+    logToAxiom('info', message);
 };
 
 const warn = (...data: any[]) => {
     const message = formatMessage(...data)
+
     console.log(`WARN: ${data}`, "color: orange")
-    axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'warn', message, timestamp: new Date().toISOString() }]);
+    logToAxiom('warn', message);
 };
 
 export const logger = { error, info, warn };
