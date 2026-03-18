@@ -12,19 +12,19 @@ const formatMessage = (...data: any[]) => data.map(d =>
 ).join(' ');
 
 const error = (...data: any[]) => {
-    const message = formatMessage(data)
+    const message = formatMessage(...data)
     console.log(`ERROR: ${message}`, "color: red")
     axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'error', message, timestamp: new Date().toISOString() }]);
 };
 
 const info = (...data: any[]) => {
-    const message = formatMessage(data)
+    const message = formatMessage(...data)
     console.log(`INFO: ${data}`)
     axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'info', message, timestamp: new Date().toISOString() }]);
 };
 
 const warn = (...data: any[]) => {
-    const message = formatMessage(data)
+    const message = formatMessage(...data)
     console.log(`WARN: ${data}`, "color: orange")
     axiom.ingest(AXIOM_DATASET_NAME, [{ level: 'warn', message, timestamp: new Date().toISOString() }]);
 };
