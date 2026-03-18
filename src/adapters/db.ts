@@ -9,6 +9,7 @@ import {
   notificationEmailLog as notificationEmailLogSchema,
   trackedPokemon as pokemonSchema
 } from "../../drizzle/schema.ts";
+import { logger } from "./logging.ts";
 
 export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
 export type Card = Omit<typeof cardsSchema.$inferInsert, "createdAt">;
@@ -24,7 +25,7 @@ const { Pool } = pg;
 const db = drizzle({
   client: new Pool({ connectionString: DATABASE_URL, ssl: true }),
   schema: { cardsSchema, pokemonSchema, cardsRelations, pokemonRelations },
-  logger: true,
+  logger: { logQuery: (query, params) => logger.info(`DB Query: ${query}`, { params }) }
 });
 
 // Get all Pokemon
