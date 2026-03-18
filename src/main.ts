@@ -1,6 +1,7 @@
 import { logger } from "./adapters/logging.ts";
 import { fetchAllPokemon } from "./handler.ts";
 
+// Dummy Server so Deno Deploy doesn't break
 Deno.serve(() => new Response("Card Herdier is running"));
 
 Deno.cron(
