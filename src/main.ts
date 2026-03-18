@@ -6,7 +6,7 @@ Deno.serve(() => new Response("Card Herdier is running"));
 
 Deno.cron(
   "Check Pokemon API for new releases",
-  { hour: { exact: [7, 13] } },
+  { hour: { exact: 7 } },
   {},
   async () => {
     if (Deno.env.get("IS_PRODUCTION") !== "true") {
