@@ -1,6 +1,9 @@
 import { logger } from "./adapters/logging.ts";
 import { fetchAllPokemon } from "./handler.ts";
 
+// Add this
+Deno.serve(() => new Response("Card Herdier is running"));
+
 Deno.cron(
   "Check Pokemon API for new releases",
   // { hour: { exact: 7 } },
