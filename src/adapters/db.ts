@@ -25,7 +25,7 @@ const { Pool } = pg;
 const db = drizzle({
   client: new Pool({ connectionString: DATABASE_URL, ssl: true }),
   schema: { cardsSchema, pokemonSchema, cardsRelations, pokemonRelations },
-  logger: { logQuery: (query, params) => logger.info(`DB Query: ${query}`, { params }) }
+  logger: { logQuery: (query, params) => logger.info(`DB Query: ${query} | Params: `, { params }) }
 });
 
 // Get all Pokemon
