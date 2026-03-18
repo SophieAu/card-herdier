@@ -3,7 +3,8 @@ import { fetchAllPokemon } from "./handler.ts";
 
 Deno.cron(
   "Check Pokemon API for new releases",
-  { hour: { exact: 7 } },
+  // { hour: { exact: 7 } },
+  { minute: { every: 30 } },
   {},
   async () => {
     try {
