@@ -3,13 +3,13 @@
   "specifiers": {
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.12",
-    "npm:@axiomhq/js@^1.4.0": "1.4.0",
+    "npm:@axiomhq/js@^1.6.0": "1.6.0",
     "npm:@tcgdex/sdk@^2.7.1": "2.7.1",
-    "npm:@types/pg@^8.18.0": "8.18.0",
+    "npm:@types/pg@^8.20.0": "8.20.0",
     "npm:drizzle-kit@~0.31.10": "0.31.10",
-    "npm:drizzle-orm@~0.45.1": "0.45.1_@types+pg@8.18.0_pg@8.20.0",
+    "npm:drizzle-orm@~0.45.2": "0.45.2_@types+pg@8.20.0_pg@8.20.0",
     "npm:pg@^8.20.0": "8.20.0",
-    "npm:resend@^6.9.4": "6.9.4"
+    "npm:resend@^6.10.0": "6.10.0"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -23,8 +23,8 @@
     }
   },
   "npm": {
-    "@axiomhq/js@1.4.0": {
-      "integrity": "sha512-wC5x1ud/QJMstrjpicATkyY8+ZVWEl4WlXMtA5EZf7hkj0+b191yv4yynLxLEfr/MveXora9m6CWdJq4DsbcAg==",
+    "@axiomhq/js@1.6.0": {
+      "integrity": "sha512-qm0ObduIpI6PJUOYwakH5WV3E7IF0qXE/wh5N1JWGAzxKtCZryk+YwA0aW3lPZSGPQeLHyEzN+9pXsOIjoPiRg==",
       "dependencies": [
         "fetch-retry"
       ]
@@ -450,14 +450,14 @@
         "@dzeio/object-util"
       ]
     },
-    "@types/node@25.2.0": {
-      "integrity": "sha512-DZ8VwRFUNzuqJ5khrvwMXHmvPe+zGayJhr2CDNiKB1WBE1ST8Djl00D0IC4vvNmHMdj6DlbYRIaFE7WHjlDl5w==",
+    "@types/node@25.5.2": {
+      "integrity": "sha512-tO4ZIRKNC+MDWV4qKVZe3Ql/woTnmHDr5JD8UI5hn2pwBrHEwOEMZK7WlNb5RKB6EoJ02gwmQS9OrjuFnZYdpg==",
       "dependencies": [
         "undici-types"
       ]
     },
-    "@types/pg@8.18.0": {
-      "integrity": "sha512-gT+oueVQkqnj6ajGJXblFR4iavIXWsGAFCk3dP4Kki5+a9R4NMt0JARdk6s8cUKcfUoqP5dAtDSLU8xYUTFV+Q==",
+    "@types/pg@8.20.0": {
+      "integrity": "sha512-bEPFOaMAHTEP1EzpvHTbmwR8UsFyHSKsRisLIHVMXnpNefSbGA1bD6CVy+qKjGSqmZqNqBDV2azOBo8TgkcVow==",
       "dependencies": [
         "@types/node",
         "pg-protocol",
@@ -477,8 +477,8 @@
       ],
       "bin": true
     },
-    "drizzle-orm@0.45.1_@types+pg@8.18.0_pg@8.20.0": {
-      "integrity": "sha512-Te0FOdKIistGNPMq2jscdqngBRfBpC8uMFVwqjf6gtTVJHIQ/dosgV/CLBU2N4ZJBsXL5savCba9b0YJskKdcA==",
+    "drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.20.0": {
+      "integrity": "sha512-kY0BSaTNYWnoDMVoyY8uxmyHjpJW1geOmBMdSSicKo9CIIWkSxMIj2rkeSR51b8KAPB7m+qysjuHme5nKP+E5Q==",
       "dependencies": [
         "@types/pg",
         "pg"
@@ -647,8 +647,8 @@
         "split2"
       ]
     },
-    "postal-mime@2.7.3": {
-      "integrity": "sha512-MjhXadAJaWgYzevi46+3kLak8y6gbg0ku14O1gO/LNOuay8dO+1PtcSGvAdgDR0DoIsSaiIA8y/Ddw6MnrO0Tw=="
+    "postal-mime@2.7.4": {
+      "integrity": "sha512-0WdnFQYUrPGGTFu1uOqD2s7omwua8xaeYGdO6rb88oD5yJ/4pPHDA4sdWqfD8wQVfCny563n/HQS7zTFft+f/g=="
     },
     "postgres-array@2.0.0": {
       "integrity": "sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA=="
@@ -665,8 +665,8 @@
         "xtend"
       ]
     },
-    "resend@6.9.4": {
-      "integrity": "sha512-/M3dsJzu5OgozqVsA4Psd/1L7EdePgOIIxClas453GOQYFG3VHc2ZyCHZFlvqsc9aZCCd2BJRRqZgWC8D9c7/g==",
+    "resend@6.10.0": {
+      "integrity": "sha512-i7CwZpYj4Oho1RxsTpLcCUkO08+HiL4NXrm6jLJ2WzJ89UGI8eROSieLONJA3hnUrf1OYnCyfq5F6POnHUMv1Q==",
       "dependencies": [
         "postal-mime",
         "svix"
@@ -695,8 +695,8 @@
         "fast-sha256"
       ]
     },
-    "svix@1.86.0": {
-      "integrity": "sha512-/HTvXwjLJe1l/MsLXAO1ddCYxElJk4eNR4DzOjDOEmGrPN/3BtBE8perGwMAaJ2sT5T172VkBYzmHcjUfM1JRQ==",
+    "svix@1.88.0": {
+      "integrity": "sha512-vm/JrrUd3bVyBE+3L33TIyVSs8gS5fYx7lrISvKlDJXTYX1ACH4REX8P1tHxsSKoZi/rvifM1t0XRc5Vc45THw==",
       "dependencies": [
         "standardwebhooks",
         "uuid"
@@ -713,8 +713,8 @@
       ],
       "bin": true
     },
-    "undici-types@7.16.0": {
-      "integrity": "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw=="
+    "undici-types@7.18.2": {
+      "integrity": "sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w=="
     },
     "uuid@10.0.0": {
       "integrity": "sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==",
@@ -727,13 +727,13 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/assert@^1.0.19",
-      "npm:@axiomhq/js@^1.4.0",
+      "npm:@axiomhq/js@^1.6.0",
       "npm:@tcgdex/sdk@^2.7.1",
-      "npm:@types/pg@^8.18.0",
+      "npm:@types/pg@^8.20.0",
       "npm:drizzle-kit@~0.31.10",
-      "npm:drizzle-orm@~0.45.1",
+      "npm:drizzle-orm@~0.45.2",
       "npm:pg@^8.20.0",
-      "npm:resend@^6.9.4"
+      "npm:resend@^6.10.0"
     ]
   }
 }
