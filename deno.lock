@@ -4,12 +4,12 @@
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "npm:@axiomhq/js@^1.6.0": "1.6.0",
-    "npm:@tcgdex/sdk@^2.7.1": "2.7.1",
+    "npm:@tcgdex/sdk@^2.9.0": "2.9.0",
     "npm:@types/pg@^8.20.0": "8.20.0",
     "npm:drizzle-kit@~0.31.10": "0.31.10",
     "npm:drizzle-orm@~0.45.2": "0.45.2_@types+pg@8.20.0_pg@8.20.0",
     "npm:pg@^8.20.0": "8.20.0",
-    "npm:resend@^6.10.0": "6.10.0"
+    "npm:resend@^6.12.3": "6.12.3"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -442,8 +442,8 @@
     "@stablelib/base64@1.0.1": {
       "integrity": "sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ=="
     },
-    "@tcgdex/sdk@2.7.1": {
-      "integrity": "sha512-wPXdCLLQ0pLcJvvKaZFllhO4cagSsnWeWyzjtZKknySKpSTLwazKxzXW7IpsdEi1+IGIOhNYa51ZDOOGT7KVfw==",
+    "@tcgdex/sdk@2.9.0": {
+      "integrity": "sha512-bSX4Bvj3jtxgpEgX/9gW9MOQk64tWozEF1Am1NJd7ruRqpich8wgf6rZkyQsHWy0Gnl7BBNWZCIDe4+izCcwXA==",
       "dependencies": [
         "@cachex/memory",
         "@cachex/web-storage",
@@ -665,8 +665,8 @@
         "xtend"
       ]
     },
-    "resend@6.10.0": {
-      "integrity": "sha512-i7CwZpYj4Oho1RxsTpLcCUkO08+HiL4NXrm6jLJ2WzJ89UGI8eROSieLONJA3hnUrf1OYnCyfq5F6POnHUMv1Q==",
+    "resend@6.12.3": {
+      "integrity": "sha512-FkEi6YPnVL96/LvH8+QP7NaeaBy5brYXwlRqUCqZZeNL0/iyKij18IPmyPXYauT/2ODn1JG04qKz+qlJfzqzTw==",
       "dependencies": [
         "postal-mime",
         "svix"
@@ -695,11 +695,10 @@
         "fast-sha256"
       ]
     },
-    "svix@1.88.0": {
-      "integrity": "sha512-vm/JrrUd3bVyBE+3L33TIyVSs8gS5fYx7lrISvKlDJXTYX1ACH4REX8P1tHxsSKoZi/rvifM1t0XRc5Vc45THw==",
+    "svix@1.92.2": {
+      "integrity": "sha512-ZmuA3UVvlnF9EgxlzmPtF7CKjQb64Z6OFlyfdDfU0sdcC7dJa+3aOYX5B9mA+RS6ch1AxBa4UP/l6KmqfGtWBQ==",
       "dependencies": [
-        "standardwebhooks",
-        "uuid"
+        "standardwebhooks"
       ]
     },
     "tsx@4.21.0": {
@@ -716,10 +715,6 @@
     "undici-types@7.18.2": {
       "integrity": "sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w=="
     },
-    "uuid@10.0.0": {
-      "integrity": "sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==",
-      "bin": true
-    },
     "xtend@4.0.2": {
       "integrity": "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ=="
     }
@@ -728,12 +723,12 @@
     "dependencies": [
       "jsr:@std/assert@^1.0.19",
       "npm:@axiomhq/js@^1.6.0",
-      "npm:@tcgdex/sdk@^2.7.1",
+      "npm:@tcgdex/sdk@^2.9.0",
       "npm:@types/pg@^8.20.0",
       "npm:drizzle-kit@~0.31.10",
       "npm:drizzle-orm@~0.45.2",
       "npm:pg@^8.20.0",
-      "npm:resend@^6.10.0"
+      "npm:resend@^6.12.3"
     ]
   }
 }

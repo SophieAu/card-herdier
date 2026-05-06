@@ -185,6 +185,7 @@ To keep Card Herdier running smoothly, perform these checks monthly:
 - [ ] Run `deno outdated` to check for package updates
 - [ ] Review security advisories: `deno task lint` (and ignore the drizzle sql error. it's auto-gen)
 - [ ] Update dependencies if needed (test locally first!)
+- [ ] RUn `npx fallow` to check code quality
 
 **Infrastructure:**
 

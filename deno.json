@@ -9,11 +9,11 @@
   "imports": {
     "@axiomhq/js": "npm:@axiomhq/js@^1.6.0",
     "@std/assert": "jsr:@std/assert@^1.0.19",
-    "@tcgdex/sdk": "npm:@tcgdex/sdk@^2.7.1",
+    "@tcgdex/sdk": "npm:@tcgdex/sdk@^2.9.0",
     "@types/pg": "npm:@types/pg@^8.20.0",
     "drizzle-kit": "npm:drizzle-kit@^0.31.10",
     "drizzle-orm": "npm:drizzle-orm@^0.45.2",
     "pg": "npm:pg@^8.20.0",
-    "resend": "npm:resend@^6.10.0"
+    "resend": "npm:resend@^6.12.3"
   }
 }
