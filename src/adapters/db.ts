@@ -11,8 +11,8 @@ import {
 } from "../../drizzle/schema.ts";
 import { logger } from "./logging.ts";
 
-export type TrackedPokemon = typeof pokemonSchema.$inferSelect;
-export type Card = Omit<typeof cardsSchema.$inferInsert, "createdAt">;
+export type DBTrackedPokemon = typeof pokemonSchema.$inferSelect;
+export type DBCard = Omit<typeof cardsSchema.$inferInsert, "createdAt">;
 type NotificationEmailLog = typeof notificationEmailLogSchema.$inferInsert
 
 const DATABASE_URL = `postgresql://${Deno.env.get("PGUSER")}:${Deno.env.get("PGPASSWORD")
@@ -38,7 +38,7 @@ export const getAllCards = async () =>
 
 // Add new Card
 export const insertCards = async (
-  ...newCards: Card[]
+  ...newCards: DBCard[]
 ) => await db.insert(cardsSchema).values(newCards);
 
 

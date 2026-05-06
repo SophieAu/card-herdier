@@ -50,6 +50,7 @@ export const fetchAllPokemon = async () => {
     showSaveWarning: !didInsertSuccessfully,
   });
 
+  // 7. done
   logger.info("Finished updating card list");
 };
 
